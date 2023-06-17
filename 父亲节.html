@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>重要的日子</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    
+    h1 {
+      margin-top: 50px;
+    }
+    
+    .father-day-song {
+      margin-top: 30px;
+    }
+    
+    .countdown {
+      margin-top: 30px;
+      font-size: 24px;
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+  <script>
+    // 计算父亲节倒计时
+    function updateCountdown() {
+      var today = new Date(); // 当前日期
+      var fatherDay = new Date(today.getFullYear(), 5, 18); // 每年的6月18日
+      
+      // 如果今天的日期已经超过了父亲节，就将日期设为下一年的父亲节
+      if (today > fatherDay) {
+        fatherDay.setFullYear(today.getFullYear() + 1);
+      }
+      
+      var timeDiff = fatherDay.getTime() - today.getTime(); // 剩余时间的毫秒数
+      var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // 剩余天数
+      var hours = Math.floor((timeDiff / (1000 * 60 * 60)) % 24); // 剩余小时数
+      var minutes = Math.floor((timeDiff / (1000 * 60)) % 60); // 剩余分钟数
+      var seconds = Math.floor((timeDiff / 1000) % 60); // 剩余秒数
+      var milliseconds = Math.floor(timeDiff % 1000); // 剩余毫秒数
+      
+      if (today.getMonth() === 5 && today.getDate() === 18) {
+        // 如果今天是父亲节，显示祝福语
+        document.getElementById('countdown').classList.add('hidden');
+        document.getElementById('father-day-wishes').classList.remove('hidden');
+      } else {
+        // 如果还未到父亲节，显示倒计时
+        document.getElementById('countdown').classList.remove('hidden');
+        document.getElementById('father-day-wishes').classList.add('hidden');
+        document.getElementById('countdown').innerHTML = '距离父亲节还有 ' + days + ' 天 ' + hours + ' 小时 ' + minutes + ' 分钟 ' + seconds + ' 秒 ' + milliseconds + ' 毫秒';
+      }
+    }
+    
+    window.onload = function() {
+      updateCountdown(); // 立即更新倒计时
+      
+      setInterval(updateCountdown, 1); // 每毫秒更新一次倒计时
+    };
+  </script>
+</head>
+<body>
+  <div id="countdown" class="countdown"></div>
+  
+  <div id="father-day-wishes" class="hidden">
+    <h1>父亲节快乐！</h1>
+    
+    <img src="https://img.zcool.cn/community/01ee7b5d063d5da801205e4bdb1f29.jpg@1280w_1l_2o_100sh.jpg" alt="父亲节快乐" width="300">
+    
+    <p>亲爱的爸爸，祝您父亲节快乐！感谢您对我们的关爱和付出。您是我们生活中最伟大的人，愿您健康、幸福、快乐！</p>
+    
+    <div class="father-day-song">
+      <a href="https://music.163.com/#/song?id=1957219788" target="_blank">点击这里收听父亲节歌曲</a>
+    </div>
+    
+    <p>再次祝您父亲节快乐！</p>
+  </div>
+</body>
+</html>
