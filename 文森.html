@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>重要的日子</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    
+    h1 {
+      margin-top: 50px;
+    }
+    
+    .birthday-song {
+      margin-top: 30px;
+    }
+    
+    .countdown {
+      margin-top: 30px;
+      font-size: 24px;
+    }
+    
+    .hidden {
+      display: none;
+    }
+  </style>
+  <script>
+    // 计算每年的倒计时
+    function updateCountdown() {
+      var today = new Date(); // 当前日期
+      var birthday = new Date(today.getFullYear(), 10, 14); // 每年的11月14日
+      
+      // 如果今天的日期已经超过了文森的生日，就将日期设为下一年的生日
+      if (today > birthday) {
+        birthday.setFullYear(today.getFullYear() + 1);
+      }
+      
+      var timeDiff = birthday.getTime() - today.getTime(); // 剩余时间的毫秒数
+      var hours = Math.floor(timeDiff / (1000 * 60 * 60)); // 剩余小时数
+      var minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60)); // 剩余分钟数
+      var seconds = Math.floor((timeDiff % (1000 * 60)) / 1000); // 剩余秒数
+      var milliseconds = timeDiff % 1000; // 剩余毫秒数
+      
+      if (today.getMonth() === 10 && today.getDate() === 14) {
+        // 如果今天是文森的生日，显示生日祝福
+        document.getElementById('countdown').classList.add('hidden');
+        document.getElementById('birthday-wishes').classList.remove('hidden');
+      } else {
+        // 如果还未到文森的生日，显示倒计时
+        document.getElementById('countdown').classList.remove('hidden');
+        document.getElementById('birthday-wishes').classList.add('hidden');
+        document.getElementById('countdown').innerHTML = '开启该页面还有 ' + hours + ' 小时 ' + minutes + ' 分钟 ' + seconds + ' 秒 ' + milliseconds + ' 毫秒';
+      }
+    }
+    
+    window.onload = function() {
+      updateCountdown(); // 立即更新倒计时
+      
+      setInterval(updateCountdown, 1); // 每毫秒更新一次倒计时
+    };
+  </script>
+</head>
+<body>
+  <div id="countdown" class="countdown"></div>
+  
+  <div id="birthday-wishes" class="hidden">
+    <h1>生日快乐，文森！</h1>
+    
+    <img src="https://img-u-1.51miz.com/Video/10/07/c95bf211_V100780_b0bf6a3f.jpg" alt="生日快乐" width="300">
+    
+    <p>亲爱的文森，祝你生日快乐！在这特殊的日子里，希望你心想事成，快乐永远伴随着你。愿你在新的一岁里健康、幸福、成功！</p>
+    
+    <div class="birthday-song">
+      <a href="https://music.163.com/#/playlist?id=168284617" target="_blank">点击这里收听生日歌</a>
+    </div>
+    
+    <p>再次祝你生日快乐！</p>
+  </div>
+</body>
+</html>
