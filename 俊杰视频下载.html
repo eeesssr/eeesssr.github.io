@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>终端界面</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #0f0;
+            font-family: "Courier New", monospace;
+            font-size: 16px;
+            line-height: 1.5;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .progress-bar {
+            width: 300px;
+            height: 20px;
+            background-color: #222;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #0f0;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        function updateProgress() {
+            var startDate = new Date("2023-06-22T22:30:00+08:00");
+            var currentDate = new Date();
+
+            if (currentDate < startDate) {
+                return;
+            }
+
+            var totalTime = 100; // 预计总时间（小时）
+            var elapsedTime = Math.floor((currentDate - startDate) / 3600000); // 已经过去的时间（小时）
+            var remainingTime = totalTime - elapsedTime; // 剩余时间（小时）
+            var progress = Math.floor((elapsedTime / totalTime) * 100); // 进度百分比
+
+            if (progress >= 100) {
+                document.getElementById("status").innerHTML = "完成下载 文件已经储存在子博的tf卡中";
+                return;
+            }
+
+            document.getElementById("progress").style.width = progress + "%";
+            document.getElementById("time").innerHTML = remainingTime + "小时";
+
+            if (progress === 0) {
+                document.getElementById("status").innerHTML = "检测到支付成功 将在6月22日 22:30开始下载";
+            } else if (progress === 1) {
+                document.getElementById("status").innerHTML = "开始下载后请重新打开该页面";
+            } else if (progress === 2) {
+                document.getElementById("status").innerHTML = "正在准备开始下载";
+            } else if (progress === 3) {
+                document.getElementById("status").innerHTML = "正在开始下载";
+            } else if (progress === 4) {
+                document.getElementById("status").innerHTML = "如需加速，请支付5元，系统确认订单后将在5分钟内完成下载（https://eeesssr.github.io/5%E5%85%83%E5%BE%AE%E4%BF%A1.jpg）";
+            } else {
+                document.getElementById("status").innerHTML = "［====================］" + progress + "% 剩余时间" + remainingTime + "小时";
+            }
+
+            setTimeout(updateProgress, 3600000); // 每过1小时更新一次进度条
+        }
+
+        updateProgress();
+    </script>
+
+    <div id="status">检测到支付成功 将在6月22日 22:30开始下载</div>
+    <div id="progress-bar">
+        <div id="progress"></div>
+    </div>
+    <div id="time"></div>
+</body>
+
+</html>
