@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频下载页面</title>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: black;
+            color: lime;
+            padding: 20px;
+        }
+        
+        #progress-bar {
+            width: 80%;
+            max-width: 400px;
+            margin: 20px 0;
+        }
+        
+        #progress-bar .progress {
+            width: 0;
+            background-color: green;
+            height: 20px;
+        }
+        
+        #payment-link {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 375px) {
+            body {
+                font-size: 16px;
+                padding: 10px;
+            }
+            
+            #progress-bar {
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+    <script>
+        function showText(text, delay) {
+            var lines = text.split("；");
+            var index = 0;
+            
+            function showNextLine() {
+                if (index < lines.length) {
+                    document.getElementById("output").innerHTML += lines[index] + "<br>";
+                    index++;
+                    setTimeout(showNextLine, delay);
+                } else {
+                    showProgressBar();
+                }
+            }
+            
+            showNextLine();
+        }
+        
+        function showProgressBar() {
+            document.getElementById("progress-bar").style.display = "block";
+            var progress = 0;
+            var progressBar = document.getElementById("progress");
+            
+            function updateProgress() {
+                if (progress <= 100) {
+                    progressBar.style.width = progress + "%";
+                    progressBar.innerHTML = "[" + "=".repeat(progress / 10) + "]" + progress + "%";
+                    progress += 10;
+                    setTimeout(updateProgress, 150);
+                } else {
+                    showPaymentLink();
+                }
+            }
+            
+            updateProgress();
+        }
+        
+        function showPaymentLink() {
+            document.getElementById("payment-link").style.display = "block";
+            setTimeout(function() {
+                document.getElementById("output").innerHTML += "<br>完成支付后请等待5分钟，待系统确认后重新打开此页面开始下载";
+            }, 1);
+        }
+    </script>
+</head>
+<body onload="showText('检测到视频名称；来源computer/wechat/聊天记录/梁俊；视频名称；疾速追杀4；鬼灭的锻刀村；请支付18元；正在生成二维码；进度；图片', 2000)">
+    <div id="output"></div>
+    <div id="progress-bar">
+        <div id="progress"></div>
+    </div>
+    <div id="payment-link">
+        <a href="https://eeesssr.github.io/18%E5%85%83%E5%BE%AE%E4%BF%A1.png">点击这里去支付</a>
+    </div>
+</body>
+</html>
