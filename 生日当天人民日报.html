@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>生日当天人民日报</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+    }
+  </style>
+  <script>
+    function generateLink() {
+      var year = document.getElementById("year").value;
+      var month = document.getElementById("month").value;
+      var day = document.getElementById("day").value;
+
+      if (month.length < 2) {
+        month = "0" + month;
+      }
+      if (day.length < 2) {
+        day = "0" + day;
+      }
+
+      var link = "http://data.people.com.cn/rmrb/" + year + month + day + "/1?code=2";
+      document.getElementById("result").innerHTML = "正在生成...";
+      setTimeout(function() {
+        window.location.href = link;
+      }, 1000);
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>选择你的生日</h1>
+    <label for="year">年：</label>
+    <input type="number" id="year" min="1900" max="2099" required><br>
+    <label for="month">月：</label>
+    <input type="number" id="month" min="1" max="12" required><br>
+    <label for="day">日：</label>
+    <input type="number" id="day" min="1" max="31" required><br>
+    <button onclick="generateLink()">生成链接</button>
+    <p id="result"></p>
+  </div>
+</body>
+</html>
