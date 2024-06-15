@@ -26,24 +26,33 @@
     }
   </style>
   <script>
+    // 计算每年6月第三个星期日的日期
+    function getFatherDay(year) {
+      var date = new Date(year, 5, 1); // 从6月1日开始
+      var day = date.getDay(); // 获取6月1日是星期几
+      var offset = (day === 0) ? 14 : 21 - day; // 计算第三个星期日的偏移天数
+      date.setDate(1 + offset);
+      return date;
+    }
+
     // 计算父亲节倒计时
     function updateCountdown() {
       var today = new Date(); // 当前日期
-      var fatherDay = new Date(today.getFullYear(), 5, 16); // 每年的6月18日
+      var fatherDay = getFatherDay(today.getFullYear()); // 当前年份的父亲节
       
       // 如果今天的日期已经超过了父亲节，就将日期设为下一年的父亲节
       if (today > fatherDay) {
-        fatherDay.setFullYear(today.getFullYear() + 1);
+        fatherDay = getFatherDay(today.getFullYear() + 1);
       }
       
-      var timeDiff = fatherDay.getTime() - today.getTime(); // 剩余时间的毫秒数
-      var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // 剩余天数
-      var hours = Math.floor((timeDiff / (1000 * 60 * 60)) % 24); // 剩余小时数
-      var minutes = Math.floor((timeDiff / (1000 * 60)) % 60); // 剩余分钟数
-      var seconds = Math.floor((timeDiff / 1000) % 60); // 剩余秒数
-      var milliseconds = Math.floor(timeDiff % 1000); // 剩余毫秒数
+      var timeDiff = fatherDay.getTime() - today.getTime(); // 距离父亲节的毫秒数
+      var days = Math.floor(timeDiff / (1000 * 60 * 60 * 24)); // 距离的天数
+      var hours = Math.floor((timeDiff / (1000 * 60 * 60)) % 24); // 距离的小时数
+      var minutes = Math.floor((timeDiff / (1000 * 60)) % 60); // 距离的分钟数
+      var seconds = Math.floor((timeDiff / 1000) % 60); // 距离的秒数
+      var milliseconds = Math.floor(timeDiff % 1000); // 距离的毫秒数
       
-      if (today.getMonth() === 5 && today.getDate() === 18) {
+      if (today.getFullYear() === fatherDay.getFullYear() && today.getMonth() === fatherDay.getMonth() && today.getDate() === fatherDay.getDate()) {
         // 如果今天是父亲节，显示祝福语
         document.getElementById('countdown').classList.add('hidden');
         document.getElementById('father-day-wishes').classList.remove('hidden');
@@ -51,14 +60,14 @@
         // 如果还未到父亲节，显示倒计时
         document.getElementById('countdown').classList.remove('hidden');
         document.getElementById('father-day-wishes').classList.add('hidden');
-        document.getElementById('countdown').innerHTML = '距离该页面开启还有 ' + days + ' 天 ' + hours + ' 小时 ' + minutes + ' 分钟 ' + seconds + ' 秒 ' + milliseconds + ' 毫秒';
+        document.getElementById('countdown').innerHTML = '距离父亲节还有 ' + days + ' 天 ' + hours + ' 小时 ' + minutes + ' 分钟 ' + seconds + ' 秒 ' + milliseconds + ' 毫秒';
       }
     }
     
     window.onload = function() {
       updateCountdown(); // 立即更新倒计时
       
-      setInterval(updateCountdown, 1); // 每毫秒更新一次倒计时
+      setInterval(updateCountdown, 10); // 每10毫秒更新一次倒计时
     };
   </script>
 </head>
