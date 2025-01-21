@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>海龟汤推理游戏</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>海龟汤推理游戏</h1>
+        <div id="story-container">
+            <p id="story"></p>
+        </div>
+        <div id="question-container">
+            <input type="text" id="question-input" placeholder="请输入你的问题（只能问是非题）">
+            <button id="submit-question">提问</button>
+        </div>
+        <div id="loading" class="loading">正在分析...</div>
+        <div id="answer-container">
+            <p id="answer"></p>
+        </div>
+        <div id="history-section">
+            <h2>问答记录</h2>
+            <div id="history-container"></div>
+        </div>
+        <div id="hint-container">
+            <button id="show-hint">显示提示</button>
+            <p id="hint"></p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 
