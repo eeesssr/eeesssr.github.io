@@ -23,7 +23,8 @@
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 40px 20px;
+            padding: 5vw;
+            box-sizing: border-box;
             background: white;
             position: relative;
         }
@@ -31,25 +32,25 @@
             background: linear-gradient(#f9f9f9, #dbe9f4);
         }
         h1 {
-            font-size: 3em;
+            font-size: 8vw;
             margin-bottom: 10px;
             color: #333;
         }
         h2 {
-            font-size: 2em;
+            font-size: 6vw;
             margin-bottom: 20px;
             color: #007bff;
         }
         p {
-            font-size: 1.2em;
-            max-width: 800px;
+            font-size: 4vw;
+            max-width: 90%;
             margin-bottom: 20px;
             color: #555;
             line-height: 1.6;
         }
         img {
             max-width: 90%;
-            max-height: 400px;
+            height: auto;
             border-radius: 10px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             margin-top: 20px;
@@ -64,8 +65,13 @@
         .page-footer {
             position: absolute;
             bottom: 10px;
-            font-size: 0.9em;
+            font-size: 3vw;
             color: #999;
+        }
+        .slide-tip {
+            font-size: 4vw;
+            margin-top: 30px;
+            color: #666;
         }
     </style>
 </head>
@@ -78,7 +84,8 @@
         <div class="swiper-slide cover">
             <h1>我的学习成长记录</h1>
             <div class="line"></div>
-            <p>—— 爱你们的（你的名字）<br>（日期）</p>
+            <p>—— 邓子博</p>
+            <div class="slide-tip">向左滑动翻页</div>
             <div class="page-footer">第 1 页 / 共 6 页</div>
         </div>
 
@@ -128,19 +135,8 @@
     const swiper = new Swiper('.swiper', {
         direction: 'horizontal',
         loop: false,
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
+        effect: 'slide',
         keyboard: true,
-        effect: 'fade',
-        fadeEffect: {
-            crossFade: true
-        },
     });
 </script>
 
