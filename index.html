@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的学习成长记录</title>
+    <link href="https://unpkg.com/swiper/swiper-bundle.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Helvetica Neue', 'Noto Sans SC', sans-serif;
+            background: #f0f2f5;
+        }
+        .swiper {
+            width: 100%;
+            height: 100vh;
+        }
+        .swiper-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            position: relative;
+        }
+        .swiper-slide.cover {
+            background: linear-gradient(#f9f9f9, #dbe9f4);
+        }
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        p {
+            font-size: 1.2em;
+            max-width: 800px;
+            margin-bottom: 20px;
+            color: #555;
+            line-height: 1.6;
+        }
+        img {
+            max-width: 90%;
+            max-height: 400px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .line {
+            width: 60px;
+            height: 4px;
+            background: #007bff;
+            margin: 20px 0;
+            border-radius: 2px;
+        }
+        .page-footer {
+            position: absolute;
+            bottom: 10px;
+            font-size: 0.9em;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+
+<div class="swiper">
+    <div class="swiper-wrapper">
+
+        <!-- 封面 -->
+        <div class="swiper-slide cover">
+            <h1>我的学习成长记录</h1>
+            <div class="line"></div>
+            <p>—— 爱你们的（你的名字）<br>（日期）</p>
+            <div class="page-footer">第 1 页 / 共 6 页</div>
+        </div>
+
+        <!-- 自我进步概述 -->
+        <div class="swiper-slide">
+            <h2>自我进步概述</h2>
+            <p>最近在学校学习过程中，我明显感觉到了自己的进步。无论是操作手法的熟练程度，还是绘图的准确性和美观度，都比刚开学时有了明显提升。特别是在机械制图方面，我对零部件结构的理解也更加透彻了。每一次完成作品、绘图作业时，我都能看到自己一点点的成长，这让我更加坚定了学好专业技能的信心。</p>
+            <img src="https://eeesssr.github.io/IMG_20250427_160619.jpg" alt="机械制图作业">
+            <div class="page-footer">第 2 页 / 共 6 页</div>
+        </div>
+
+        <!-- 心里话 -->
+        <div class="swiper-slide">
+            <h2>心里话</h2>
+            <p>从初中以文化课为主的学习，到现在逐渐转向专业技能的学习，起初我也有些不适应。但在一次次动手实践和不断积累中，我慢慢体会到，专业技能不仅仅是学习一门手艺，更是锻炼思考能力和动手能力的过程。现在，我已经习惯了将理论与实践结合起来的学习方式，也更加明确了自己努力的方向。</p>
+            <div class="page-footer">第 3 页 / 共 6 页</div>
+        </div>
+
+        <!-- 学习成果展示 -->
+        <div class="swiper-slide">
+            <h2>学习成果展示</h2>
+            <p>在这段时间的学习生活中，我完成了许多实训和绘画作业，例如机械零件的精确绘图、产品设计的草图练习等。每一张图纸、每一个作品，都是我不断练习、反复修改的成果。通过这些实际作品，我也更加理解了工业设计这门专业的要求和魅力。</p>
+            <img src="https://eeesssr.github.io/IMG_20250427_160817.jpg" alt="绘画作品">
+            <div class="page-footer">第 4 页 / 共 6 页</div>
+        </div>
+
+        <!-- 职业蓝图 -->
+        <div class="swiper-slide">
+            <h2>职业蓝图</h2>
+            <p>虽然过去文化课成绩并不突出，但我相信，凭借扎实的技能、细致的态度和持续的努力，我一样可以实现自己的目标。我打算在工业设计领域不断深耕，从基础技能做起，逐步提升自己的设计水平和创新能力。</p>
+            <div class="page-footer">第 5 页 / 共 6 页</div>
+        </div>
+
+        <!-- 家长承诺与需求 -->
+        <div class="swiper-slide">
+            <h2>家长承诺与需求</h2>
+            <p>为了进一步提升专业技能学习的效率，我需要一台性能良好的笔记本电脑，以便进行绘图、建模、制图等专业软件操作。我郑重承诺，电脑将专门用于学习，不会沉迷于游戏和娱乐。我会用它认真完成作业、提升技能水平，在今后的家长会上，把我用努力换来的学习成果亲手呈现给您们。</p>
+            <img src="https://eeesssr.github.io/IMG_20250427_160703.jpg" alt="荣誉证书全勤奖">
+            <div class="page-footer">第 6 页 / 共 6 页</div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<script>
+    const swiper = new Swiper('.swiper', {
+        direction: 'horizontal',
+        loop: false,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        keyboard: true,
+        effect: 'fade',
+        fadeEffect: {
+            crossFade: true
+        },
+    });
+</script>
+
+</body>
+</html>
