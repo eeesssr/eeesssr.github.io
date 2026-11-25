@@ -1,0 +1,31 @@
+{
+  "name": "muscriptor2sky",
+  "short_name": "muscriptor2sky",
+  "description": "在浏览器里把 MIDI 转换成光遇 15 键琴谱（兼容 SkyStudio）。所有处理都在你的浏览器里完成，文件不会离开你的设备。",
+  "lang": "zh-CN",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#ffffff",
+  "theme_color": "#3d8bfd",
+  "categories": [
+    "music",
+    "utilities"
+  ],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20512%20512'%3E%3Crect%20width%3D'512'%20height%3D'512'%20rx%3D'112'%20fill%3D'%233d8bfd'%2F%3E%3Crect%20x%3D'96'%20y%3D'160'%20width%3D'320'%20height%3D'192'%20rx%3D'28'%20fill%3D'%23ffffff'%2F%3E%3Cg%20fill%3D'%233d8bfd'%3E%3Crect%20x%3D'150'%20y%3D'200'%20width%3D'18'%20height%3D'112'%20rx%3D'9'%2F%3E%3Crect%20x%3D'214'%20y%3D'200'%20width%3D'18'%20height%3D'112'%20rx%3D'9'%2F%3E%3Crect%20x%3D'278'%20y%3D'200'%20width%3D'18'%20height%3D'112'%20rx%3D'9'%2F%3E%3Crect%20x%3D'342'%20y%3D'200'%20width%3D'18'%20height%3D'112'%20rx%3D'9'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20512%20512'%3E%3Crect%20width%3D'512'%20height%3D'512'%20fill%3D'%233d8bfd'%2F%3E%3Crect%20x%3D'128'%20y%3D'176'%20width%3D'256'%20height%3D'160'%20rx%3D'24'%20fill%3D'%23ffffff'%2F%3E%3Cg%20fill%3D'%233d8bfd'%3E%3Crect%20x%3D'170'%20y%3D'208'%20width%3D'16'%20height%3D'96'%20rx%3D'8'%2F%3E%3Crect%20x%3D'222'%20y%3D'208'%20width%3D'16'%20height%3D'96'%20rx%3D'8'%2F%3E%3Crect%20x%3D'274'%20y%3D'208'%20width%3D'16'%20height%3D'96'%20rx%3D'8'%2F%3E%3Crect%20x%3D'326'%20y%3D'208'%20width%3D'16'%20height%3D'96'%20rx%3D'8'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

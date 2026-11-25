@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>muscriptor2sky · MIDI 转光遇 15 键琴谱</title>
+<meta name="description" content="在浏览器里把 MIDI 转换成光遇 15 键琴谱（兼容 SkyStudio）。所有处理都在你的浏览器里完成，文件不会离开你的设备。">
+<meta name="theme-color" content="#3d8bfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12151a" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="muscriptor2sky">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%2064%2064'%3E%3Crect%20width%3D'64'%20height%3D'64'%20rx%3D'15'%20fill%3D'%233d8bfd'%2F%3E%3Crect%20x%3D'10'%20y%3D'19'%20width%3D'44'%20height%3D'26'%20rx%3D'4'%20fill%3D'%23ffffff'%2F%3E%3Cg%20fill%3D'%233d8bfd'%3E%3Crect%20x%3D'18'%20y%3D'24'%20width%3D'2.5'%20height%3D'16'%2F%3E%3Crect%20x%3D'26'%20y%3D'24'%20width%3D'2.5'%20height%3D'16'%2F%3E%3Crect%20x%3D'34'%20y%3D'24'%20width%3D'2.5'%20height%3D'16'%2F%3E%3Crect%20x%3D'42'%20y%3D'24'%20width%3D'2.5'%20height%3D'16'%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E">
+<style>
+:root {
+  --bg: #ffffff;
+  --card: #ffffff;
+  --fg: #1a1f27;
+  --muted: #6b7280;
+  --line: #dfe4ec;
+  --accent: #3d8bfd;
+  --accent-soft: #eef5ff;
+  --accent-strong: #1f6feb;
+  --pre-bg: #fbfcfe;
+  --err: #b3261e;
+  --ok: #147a4d;
+  --warn-bg: #fff8e6;
+  --warn-line: #f2d48a;
+  --warn-fg: #7a5a12;
+  --err-bg: #fdecec;
+  --err-line: #f3b4b4;
+  --shadow: 0 1px 2px rgba(16, 24, 40, .04), 0 8px 24px rgba(16, 24, 40, .05);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #12151a;
+    --card: #171b21;
+    --fg: #e6e9ef;
+    --muted: #9aa4b2;
+    --line: #2b313b;
+    --accent: #5aa2ff;
+    --accent-soft: #16202f;
+    --accent-strong: #8ec0ff;
+    --pre-bg: #0e1216;
+    --err: #ff9b9b;
+    --ok: #5fd39b;
+    --warn-bg: #2a2214;
+    --warn-line: #5c4a1e;
+    --warn-fg: #f0d089;
+    --err-bg: #2c1717;
+    --err-line: #6a2b2b;
+    --shadow: none;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+.wrap { max-width: 760px; margin: 0 auto; padding: 20px 16px 40px; }
+
+.head { text-align: center; padding: 8px 0 2px; }
+h1 { margin: 0 0 6px; font-size: 26px; font-weight: 650; letter-spacing: .02em; }
+.sub { margin: 0; color: var(--muted); font-size: 15px; }
+.privacy {
+  display: inline-block; margin: 14px auto 0; padding: 8px 14px;
+  background: var(--accent-soft); color: var(--accent-strong);
+  border-radius: 999px; font-size: 13px; line-height: 1.5;
+}
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.drop {
+  margin-top: 22px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 6px; min-height: 190px; padding: 28px 18px;
+  border: 2px dashed var(--line); border-radius: 16px;
+  background: var(--card); text-align: center; cursor: pointer;
+  transition: border-color .15s ease, background .15s ease, transform .1s ease;
+  outline: none;
+}
+.drop:hover, .drop:focus-visible { border-color: var(--accent); background: var(--accent-soft); }
+.drop.over { border-color: var(--accent); background: var(--accent-soft); transform: scale(1.005); }
+.drop-icon { font-size: 34px; line-height: 1; color: var(--accent); }
+.drop-title { margin: 8px 0 0; font-size: 17px; font-weight: 600; }
+.drop-hint { margin: 2px 0 0; color: var(--muted); font-size: 13px; }
+
+.card {
+  margin-top: 18px; padding: 16px;
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 14px; box-shadow: var(--shadow);
+}
+.file-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.file-meta { min-width: 0; }
+.file-name { font-weight: 600; word-break: break-all; }
+.file-sub { color: var(--muted); font-size: 13px; }
+
+.field-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 14px; }
+@media (min-width: 620px) { .field-grid { grid-template-columns: 1fr 1fr; } }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.label { font-size: 13px; color: var(--muted); }
+input[type="text"], select {
+  width: 100%; min-height: 44px; padding: 10px 12px;
+  font: inherit; font-size: 16px; color: var(--fg); background: var(--bg);
+  border: 1px solid var(--line); border-radius: 10px;
+  -webkit-appearance: none; appearance: none;
+}
+input[type="text"]:focus, select:focus {
+  outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent);
+}
+.field.check { flex-direction: row; align-items: center; gap: 10px; min-height: 44px; }
+.field.check input { width: 22px; height: 22px; margin: 0; accent-color: var(--accent); }
+
+.btn {
+  min-height: 48px; padding: 12px 22px; border-radius: 12px;
+  font: inherit; font-size: 16px; font-weight: 600; cursor: pointer;
+  border: 1px solid transparent;
+  transition: filter .15s ease, background .15s ease, border-color .15s ease;
+}
+.btn.primary { background: var(--accent); color: #fff; width: 100%; }
+.btn.primary:hover:not(:disabled) { filter: brightness(1.06); }
+.btn.primary:active:not(:disabled) { filter: brightness(.94); }
+.btn.ghost {
+  min-height: 40px; padding: 8px 14px; font-size: 14px; font-weight: 500;
+  background: transparent; color: var(--muted); border-color: var(--line);
+}
+.btn.ghost:hover { border-color: var(--accent); color: var(--accent-strong); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn:focus-visible { outline: 2px solid var(--accent-strong); outline-offset: 2px; }
+
+.actions { margin-top: 16px; }
+
+.adv summary {
+  display: flex; align-items: center; justify-content: space-between;
+  min-height: 44px; cursor: pointer; font-weight: 600; list-style: none;
+}
+.adv summary::-webkit-details-marker { display: none; }
+.chev { color: var(--muted); transition: transform .15s ease; }
+.adv[open] .chev { transform: rotate(180deg); }
+.adv-body { padding-top: 2px; }
+.tiny { margin: 10px 0 0; color: var(--muted); font-size: 12.5px; line-height: 1.6; }
+
+.banner { margin-top: 18px; padding: 14px 16px; border-radius: 12px; font-size: 14px; line-height: 1.6; }
+.banner.warn { background: var(--warn-bg); border: 1px solid var(--warn-line); color: var(--warn-fg); }
+.banner.warn strong { display: block; margin-bottom: 2px; }
+.banner.error {
+  background: var(--err-bg); border: 1px solid var(--err-line); color: var(--err);
+  white-space: pre-wrap; word-break: break-word;
+}
+
+.card-title { margin: 0 0 4px; font-size: 16px; font-weight: 650; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-top: 12px; }
+.stat { padding: 10px 12px; background: var(--accent-soft); border-radius: 10px; }
+.stat-label { font-size: 12px; color: var(--muted); }
+.stat-value { margin-top: 2px; font-size: 17px; font-weight: 650; word-break: break-word; }
+.stat.ok .stat-value { color: var(--ok); }
+.stat.bad .stat-value { color: var(--err); }
+
+.pre-title { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin: 18px 0 8px; font-size: 14px; }
+.preview {
+  margin: 0; padding: 12px; max-height: 420px; overflow: auto;
+  background: var(--pre-bg); border: 1px solid var(--line); border-radius: 10px;
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 12.5px; line-height: 1.55; white-space: pre;
+  -webkit-overflow-scrolling: touch;
+}
+.result-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.result-actions .btn { width: 100%; }
+@media (min-width: 620px) {
+  .result-actions { flex-direction: row; align-items: center; }
+  .result-actions .btn { width: auto; min-width: 220px; }
+}
+
+.foot { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--line); text-align: center; color: var(--muted); font-size: 13px; }
+.foot p { margin: 4px 0; }
+.foot a { color: var(--accent-strong); text-decoration: none; }
+.foot a:hover { text-decoration: underline; }
+
+/* ---------- 友情链接 ---------- */
+.links {
+  margin-top: 26px; padding: 16px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+}
+.links h2 { margin: 0 0 12px; font-size: 14px; font-weight: 600; color: var(--muted); letter-spacing: .04em; }
+.link-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 0; border-top: 1px solid var(--line);
+}
+.link-row:first-of-type { border-top: 0; padding-top: 0; }
+.link-main { flex: 1; min-width: 0; }
+.link-name { font-weight: 600; font-size: 15px; }
+.link-name a { color: var(--accent-strong); text-decoration: none; }
+.link-name a:hover { text-decoration: underline; }
+.link-desc { color: var(--muted); font-size: 13px; margin-top: 2px; }
+
+/* 「i」按钮：点开显示使用方法 */
+.info-btn {
+  flex: 0 0 auto;
+  width: 30px; height: 30px; min-width: 30px; padding: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--line); border-radius: 50%;
+  background: var(--bg); color: var(--muted);
+  font: 600 15px/1 Georgia, "Times New Roman", serif; font-style: italic;
+  cursor: pointer; -webkit-appearance: none; appearance: none;
+  transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+.info-btn:hover, .info-btn:focus-visible { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.info-btn[aria-expanded="true"] { border-color: var(--accent); color: #fff; background: var(--accent); }
+
+/* 展开的使用方法 */
+.howto { margin-top: 10px; padding: 12px 14px; background: var(--accent-soft); border-radius: 10px; font-size: 13.5px; line-height: 1.7; }
+.howto ol { margin: 6px 0 0; padding-left: 20px; }
+.howto li { margin: 3px 0; }
+.howto code {
+  padding: 1px 5px; border-radius: 4px;
+  background: var(--bg); border: 1px solid var(--line);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12.5px;
+}
+.howto .note { margin-top: 8px; color: var(--muted); font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <h1>muscriptor2sky</h1>
+    <p class="sub">把 MIDI 转换成光遇 15 键琴谱（兼容 SkyStudio）</p>
+    <p class="privacy">所有处理都在你的浏览器里完成，文件不会离开你的设备。</p>
+  </header>
+
+  <div id="core-warn" class="banner warn" hidden>
+    <strong>核心脚本 sky-core.js 未加载</strong>
+    <span id="core-warn-detail">请确认 sky-core.js 与本页面放在同一目录，然后刷新页面。</span>
+  </div>
+
+  <div id="dropzone" class="drop" role="button" tabindex="0" aria-label="将 .mid 文件拖到此处，或点击选择">
+    <div class="drop-icon" aria-hidden="true">♪</div>
+    <p class="drop-title">将 .mid 文件拖到此处，或点击选择</p>
+    <p class="drop-hint">支持标准 MIDI（.mid / .midi）· 全程本机处理，不上传</p>
+    <input id="file-input" class="sr-only" type="file" accept=".mid,.midi,.smf,audio/midi,audio/x-midi">
+  </div>
+
+  <section id="file-card" class="card" hidden>
+    <div class="file-row">
+      <div class="file-meta">
+        <div id="file-name" class="file-name"></div>
+        <div id="file-size" class="file-sub"></div>
+      </div>
+      <button id="file-clear" type="button" class="btn ghost">重新选择</button>
+    </div>
+    <div class="field-grid">
+      <label class="field">
+        <span class="label">曲名</span>
+        <input id="opt-name" type="text" autocomplete="off" spellcheck="false" placeholder="默认取文件名">
+      </label>
+      <label class="field">
+        <span class="label">作者</span>
+        <input id="opt-author" type="text" autocomplete="off" spellcheck="false" placeholder="可留空">
+      </label>
+    </div>
+  </section>
+
+  <details id="adv" class="card adv">
+    <summary>高级选项<span class="chev" aria-hidden="true">▾</span></summary>
+    <div class="adv-body">
+      <div class="field-grid">
+        <label class="field">
+          <span class="label">时间网格 grid</span>
+          <select id="opt-grid">
+            <option value="0.25" selected>0.25（十六分音符，默认）</option>
+            <option value="0.125">0.125（三十二分音符，更细）</option>
+            <option value="0">0（不对齐网格）</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="label">复音上限 maxPoly</span>
+          <select id="opt-maxpoly">
+            <option value="0" selected>不限（默认）</option>
+            <option value="1">1（只保留主旋律）</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="label">移调 transpose</span>
+          <select id="opt-transpose">
+            <option value="auto" selected>auto（自动移调，默认）</option>
+            <option value="none">none（保持原调）</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="label">定调 pitchLevel</span>
+          <select id="opt-pitchlevel">
+            <option value="0" selected>0 · C 调（默认）</option>
+            <option value="1">1 · ♯C / ♭D</option>
+            <option value="2">2 · D</option>
+            <option value="3">3 · ♯D / ♭E</option>
+            <option value="4">4 · E</option>
+            <option value="5">5 · F</option>
+            <option value="6">6 · ♯F / ♭G</option>
+            <option value="7">7 · G</option>
+            <option value="8">8 · ♯G / ♭A</option>
+            <option value="9">9 · A</option>
+            <option value="10">10 · ♯A / ♭B</option>
+            <option value="11">11 · B</option>
+          </select>
+        </label>
+        <label class="field">
+          <span class="label">编码 encoding</span>
+          <select id="opt-encoding">
+            <option value="utf-16" selected>utf-16（SkyStudio 标准）</option>
+            <option value="utf-8">utf-8</option>
+          </select>
+        </label>
+        <label class="field check">
+          <input id="opt-virtual" type="checkbox">
+          <span>虚音模式 virtualNotes（实验性）</span>
+        </label>
+      </div>
+      <p class="tiny">这些选项对应 API.md 里的 Opts；改动后需要重新点一次「转换」。</p>
+    </div>
+  </details>
+
+  <div id="actions" class="actions" hidden>
+    <button id="convert-btn" type="button" class="btn primary" disabled>转换</button>
+    <p class="tiny">生成的文件由浏览器直接下载到你的设备，中途没有任何上传。</p>
+  </div>
+
+  <div id="error" class="banner error" role="alert" hidden></div>
+
+  <section id="result" class="card" hidden>
+    <h2 class="card-title">转换结果</h2>
+    <div id="stats" class="stats"></div>
+    <p id="detail-line" class="tiny"></p>
+    <h3 class="pre-title">简谱预览 <span id="preview-note" class="tiny"></span></h3>
+    <pre id="preview" class="preview"></pre>
+    <div class="result-actions">
+      <button id="download-btn" type="button" class="btn primary" disabled>下载 .txt</button>
+      <span id="out-name" class="tiny"></span>
+    </div>
+  </section>
+
+  <noscript>
+    <div class="banner warn">这个页面需要 JavaScript 才能工作：转换全部在你的浏览器里完成，所以关掉脚本就没法转换。</div>
+  </noscript>
+
+  <section class="links">
+    <h2>友情链接</h2>
+
+    <div class="link-row">
+      <div class="link-main">
+        <div class="link-name">
+          <a href="https://muscriptor.kyutai.org/" target="_blank" rel="noopener noreferrer">MuScriptor</a>
+        </div>
+        <div class="link-desc">音频转 MIDI / 乐谱（Kyutai 出品，免费开源）—— 本站的上游</div>
+      </div>
+      <button id="muscriptor-info" type="button" class="info-btn"
+              aria-expanded="false" aria-controls="muscriptor-howto"
+              aria-label="查看 MuScriptor 使用方法" title="使用方法">i</button>
+    </div>
+
+    <div id="muscriptor-howto" class="howto" hidden>
+      <strong>怎么用 MuScriptor 得到能喂给本站的 .mid</strong>
+      <ol>
+        <li>打开 <a href="https://muscriptor.kyutai.org/" target="_blank" rel="noopener noreferrer">muscriptor.kyutai.org</a>，点上传，选你的音频文件（mp3 / wav / flac 等）。</li>
+        <li>等它转谱完成。它会自动识别乐器，钢琴曲通常直接给出一条钢琴轨。</li>
+        <li>下载 <code>.mid</code> 文件（不要下 PDF 或吉他谱，本站要的是 MIDI）。</li>
+        <li>回到本页，把这个 <code>.mid</code> 拖进上面的虚线框，点「转换」，再点「下载 .txt」。</li>
+      </ol>
+      <div class="note">
+        提示：音频质量越干净、混音越简单，转出来的 MIDI 越准。
+        如果是整首歌带人声和鼓，可以在 MuScriptor 里只保留钢琴轨再下载，效果会好很多。
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p><span id="foot-version">v1.5.0_web</span> · MIT 协议 · <a href="https://github.com/eeesssr/muscriptor2sky" target="_blank" rel="noopener noreferrer">GitHub 仓库</a></p>
+    <p class="tiny">纯本地运行：没有后端、没有网络请求、没有上传。</p>
+  </footer>
+
+</div>
+
+<script src="sky-core.js" onerror="window.__skyCoreLoadFailed = true"></script>
+<script>
+(function () {
+  'use strict';
+
+  var REQUIRED = ['convert', 'preview'];
+
+  function byId(id) { return document.getElementById(id); }
+
+  var els = {
+    dropzone: byId('dropzone'),
+    input: byId('file-input'),
+    fileCard: byId('file-card'),
+    fileName: byId('file-name'),
+    fileSize: byId('file-size'),
+    fileClear: byId('file-clear'),
+    nameInput: byId('opt-name'),
+    authorInput: byId('opt-author'),
+    grid: byId('opt-grid'),
+    maxPoly: byId('opt-maxpoly'),
+    transpose: byId('opt-transpose'),
+    pitchLevel: byId('opt-pitchlevel'),
+    encoding: byId('opt-encoding'),
+    virtual: byId('opt-virtual'),
+    actions: byId('actions'),
+    convertBtn: byId('convert-btn'),
+    error: byId('error'),
+    result: byId('result'),
+    stats: byId('stats'),
+    detail: byId('detail-line'),
+    preview: byId('preview'),
+    previewNote: byId('preview-note'),
+    outName: byId('out-name'),
+    downloadBtn: byId('download-btn'),
+    coreWarn: byId('core-warn'),
+    coreWarnDetail: byId('core-warn-detail'),
+    version: byId('foot-version'),
+    muscriptorInfo: byId('muscriptor-info'),
+    muscriptorHowto: byId('muscriptor-howto')
+  };
+
+  var state = { file: null, bytes: null, outName: '', result: null, busy: false };
+  var coreOk = false;
+
+  /* ---------- 小工具 ---------- */
+
+  function trim(s) { return (s == null ? '' : String(s)).replace(/^\s+|\s+$/g, ''); }
+
+  function num(v) {
+    if (v === null || v === undefined || v === '') return null;
+    var n = typeof v === 'number' ? v : parseFloat(v);
+    return (typeof n === 'number' && isFinite(n)) ? n : null;
+  }
+
+  function toBytes(v) {
+    if (!v) return null;
+    if (typeof Uint8Array !== 'undefined' && v instanceof Uint8Array) return v;
+    if (typeof ArrayBuffer !== 'undefined' && v instanceof ArrayBuffer) return new Uint8Array(v);
+    if (typeof v === 'object' && typeof v.byteLength === 'number' && v.buffer) {
+      return new Uint8Array(v.buffer, v.byteOffset || 0, v.byteLength);
+    }
+    if (Object.prototype.toString.call(v) === '[object Array]') return new Uint8Array(v);
+    return null;
+  }
+
+  function formatSize(n) {
+    var b = num(n);
+    if (b === null) return '';
+    if (b < 1024) return b + ' B';
+    if (b < 1024 * 1024) return (Math.round(b / 102.4) / 10) + ' KB';
+    return (Math.round(b / 104857.6) / 10) + ' MB';
+  }
+
+  function baseName(name) {
+    var s = String(name || '').replace(/^.*[\\/]/, '');
+    s = s.replace(/\.[^.]*$/, '');
+    return s || 'song';
+  }
+
+  function sanitizeName(name) {
+    var s = String(name || '').replace(/^.*[\\/]/, '');
+    s = s.replace(/[\\/:*?"<>|\u0000-\u001f]+/g, '_');
+    s = trim(s);
+    if (!s) s = 'song';
+    if (!/\.txt$/i.test(s)) s = s + '.txt';
+    return s;
+  }
+
+  function errorText(e) {
+    if (!e) return '未知错误';
+    if (e.message) return String(e.message);
+    return String(e);
+  }
+
+  function pctText(v) {
+    var n = num(v);
+    if (n === null) return '—';
+    var p = (n >= 0 && n <= 1) ? n * 100 : n;
+    return (Math.round(p * 10) / 10) + '%';
+  }
+
+  /* ---------- 核心脚本可用性 ---------- */
+
+  function checkCore(core) {
+    if (!core || typeof core !== 'object') return { ok: false, missing: ['SkyCore 对象'] };
+    var missing = [];
+    for (var i = 0; i < REQUIRED.length; i++) {
+      if (typeof core[REQUIRED[i]] !== 'function') missing.push(REQUIRED[i]);
+    }
+    return { ok: missing.length === 0, missing: missing };
+  }
+
+  function showCoreWarn(missing) {
+    els.coreWarn.hidden = false;
+    var detail = '请确认 sky-core.js 与本页面放在同一目录，然后刷新页面。';
+    if (missing && missing.length) detail = '缺少成员：' + missing.join('、') + '。' + detail;
+    if (window.__skyCoreLoadFailed) detail = '浏览器没能加载 sky-core.js（文件不存在或被拦截）。' + detail;
+    els.coreWarnDetail.textContent = detail;
+    els.convertBtn.disabled = true;
+  }
+
+  /* ---------- 错误 / 状态 ---------- */
+
+  function showError(msg) {
+    els.error.textContent = msg;
+    els.error.hidden = false;
+  }
+
+  function hideError() {
+    els.error.hidden = true;
+    els.error.textContent = '';
+  }
+
+  function setBusy(busy) {
+    state.busy = busy;
+    if (busy) {
+      els.convertBtn.disabled = true;
+      els.convertBtn.textContent = '转换中…';
+    } else {
+      els.convertBtn.textContent = '转换';
+      els.convertBtn.disabled = !(coreOk && state.bytes);
+    }
+  }
+
+  /* ---------- 选择文件 ---------- */
+
+  function readFileAsBytes(file) {
+    return new Promise(function (resolve, reject) {
+      var reader = new FileReader();
+      reader.onload = function () { resolve(new Uint8Array(reader.result)); };
+      reader.onerror = function () { reject(reader.error || new Error('读取文件失败')); };
+      try { reader.readAsArrayBuffer(file); } catch (e) { reject(e); }
+    });
+  }
+
+  function selectFile(file) {
+    if (!file) return;
+    hideError();
+    if (!file.size) {
+      showError('这个文件是空的（0 字节），请换一个 MIDI 文件。');
+      return;
+    }
+    state.file = file;
+    state.result = null;
+    els.fileName.textContent = file.name || '（未命名文件）';
+    els.fileSize.textContent = formatSize(file.size) + ' · 只在本地读取';
+    els.fileCard.hidden = false;
+    els.actions.hidden = false;
+    els.result.hidden = true;
+    els.downloadBtn.disabled = true;
+    if (!trim(els.nameInput.value)) els.nameInput.value = baseName(file.name);
+    state.outName = sanitizeName(baseName(file.name));
+    state.bytes = null;
+    els.convertBtn.disabled = true;
+    els.convertBtn.textContent = '读取中…';
+
+    readFileAsBytes(file).then(function (bytes) {
+      if (state.file !== file) return;
+      state.bytes = bytes;
+      els.fileSize.textContent = formatSize(file.size) + ' · 已读入内存，未上传';
+      setBusy(false);
+    }).catch(function (err) {
+      if (state.file !== file) return;
+      showError('读取文件失败：' + errorText(err));
+      els.convertBtn.textContent = '转换';
+      els.convertBtn.disabled = true;
+    });
+  }
+
+  function resetAll() {
+    state.file = null;
+    state.bytes = null;
+    state.result = null;
+    state.outName = '';
+    els.input.value = '';
+    els.fileCard.hidden = true;
+    els.actions.hidden = true;
+    els.result.hidden = true;
+    els.nameInput.value = '';
+    els.authorInput.value = '';
+    els.downloadBtn.disabled = true;
+    els.convertBtn.disabled = true;
+    els.convertBtn.textContent = '转换';
+    hideError();
+    try { els.dropzone.focus(); } catch (e) {}
+  }
+
+  /* ---------- Opts ---------- */
+
+  function buildOpts() {
+    var core = window.SkyCore || {};
+    var o = {
+      name: null,
+      author: null,
+      arranged: null,
+      transcribed: null,
+      bpm: null,
+      bitsPerPage: 16,
+      pitchLevel: 0,
+      virtualNotes: false,
+      encoding: 'utf-16',
+      root: 60,
+      transpose: 'auto',
+      grid: 0.25,
+      maxPoly: 0,
+      ppq: 480,
+      noteLen: 0.25,
+      fileName: null
+    };
+    var d = core.DEFAULTS;
+    if (d && typeof d === 'object') {
+      for (var k in d) {
+        if (Object.prototype.hasOwnProperty.call(d, k)) o[k] = d[k];
+      }
+    }
+    var name = trim(els.nameInput.value);
+    var author = trim(els.authorInput.value);
+    o.name = name || null;
+    o.author = author || null;
+    var g = num(els.grid.value);
+    if (g !== null) o.grid = g;
+    var mp = num(els.maxPoly.value);
+    if (mp !== null) o.maxPoly = mp;
+    if (els.transpose.value === 'none' || els.transpose.value === 'auto') o.transpose = els.transpose.value;
+    var pl = num(els.pitchLevel.value);
+    if (pl !== null) o.pitchLevel = pl;
+    if (els.encoding.value === 'utf-8' || els.encoding.value === 'utf-16') o.encoding = els.encoding.value;
+    o.virtualNotes = !!els.virtual.checked;
+    o.fileName = state.outName || null;
+    return o;
+  }
+
+  /* ---------- 转换 ---------- */
+
+  function doConvert() {
+    if (state.busy) return;
+    var core = window.SkyCore;
+    var st = checkCore(core);
+    if (!st.ok) { showCoreWarn(st.missing); return; }
+    if (!state.bytes) { showError('请先选择一个 .mid 文件。'); return; }
+    hideError();
+    setBusy(true);
+    setTimeout(function () {
+      try {
+        runConvert(core);
+      } catch (e) {
+        showError(errorText(e));
+        els.result.hidden = true;
+      } finally {
+        setBusy(false);
+      }
+    }, 20);
+  }
+
+  function runConvert(core) {
+    var opts = buildOpts();
+    var res = core.convert(state.bytes, opts);
+    if (!res || !res.bytes) throw new Error('转换没有返回结果，核心脚本可能还没写完。');
+    var outBytes = toBytes(res.bytes);
+    if (!outBytes) throw new Error('转换返回的 bytes 不是字节数组，无法生成文件。');
+
+    var notes = null;
+    try {
+      if (typeof core.readMidi === 'function' && typeof core.midiToSky === 'function') {
+        var midi = core.readMidi(state.bytes);
+        var mapped = core.midiToSky(midi, opts);
+        if (mapped && mapped.notes) notes = mapped.notes;
+      }
+    } catch (eNotes) {
+      notes = null;
+    }
+
+    var info = (res.info && typeof res.info === 'object') ? res.info : {};
+    var verify = null;
+    var verifyErr = null;
+    try {
+      if (typeof core.skyrParse === 'function') verify = core.skyrParse(outBytes);
+    } catch (eVerify) {
+      verifyErr = eVerify;
+    }
+
+    var previewText = '';
+    var previewNote = '';
+    try {
+      if (notes && typeof core.preview === 'function') {
+        previewText = String(core.preview(notes) || '');
+      }
+    } catch (ePreview) {
+      previewText = '';
+    }
+    if (!previewText && res.text) {
+      previewText = String(res.text);
+      previewNote = '（简谱预览不可用，以下是谱面原始文本）';
+    }
+
+    var outName = pickOutName(res);
+    render({
+      info: info,
+      notes: notes,
+      verify: verify,
+      verifyErr: verifyErr,
+      previewText: previewText,
+      previewNote: previewNote,
+      outName: outName
+    });
+    state.result = { bytes: outBytes, name: outName };
+  }
+
+  function pickOutName(res) {
+    var fallback = state.outName || 'song.txt';
+    if (res && typeof res.fileName === 'string' && trim(res.fileName)) {
+      var n = trim(res.fileName).replace(/^.*[\\/]/, '');
+      if (n && n !== '.' && n !== '..') return sanitizeName(n);
+    }
+    return sanitizeName(fallback);
+  }
+
+  /* ---------- 渲染 ---------- */
+
+  function statEl(label, value, cls) {
+    var box = document.createElement('div');
+    box.className = 'stat' + (cls ? ' ' + cls : '');
+    var l = document.createElement('div');
+    l.className = 'stat-label';
+    l.textContent = label;
+    var v = document.createElement('div');
+    v.className = 'stat-value';
+    v.textContent = value;
+    box.appendChild(l);
+    box.appendChild(v);
+    return box;
+  }
+
+  function numText(v) {
+    var n = num(v);
+    return n === null ? '—' : String(n);
+  }
+
+  function transposeText(v) {
+    var n = num(v);
+    if (n === null) return '—';
+    if (n === 0) return '0 半音';
+    return (n > 0 ? '+' : '') + n + ' 半音';
+  }
+
+  function bpmText(v) {
+    var n = num(v);
+    if (n === null) return '—';
+    return String(Math.round(n * 100) / 100);
+  }
+
+  function melodyText(m) {
+    if (!m || typeof m !== 'object') return '—';
+    var rate = pctText(m.rate);
+    var kept = num(m.kept);
+    var total = num(m.total);
+    if (kept !== null && total !== null) return rate + '（' + kept + '/' + total + '）';
+    return rate;
+  }
+
+  function detailText(r) {
+    var info = r.info || {};
+    var parts = [];
+    var st = info.stat;
+    if (st && typeof st === 'object') {
+      var map = [];
+      if (num(st.exact) !== null) map.push('精确 ' + num(st.exact));
+      if (num(st.octave) !== null) map.push('八度折叠 ' + num(st.octave));
+      if (num(st.snapped) !== null) map.push('半音吸附 ' + num(st.snapped));
+      if (num(st.merged) !== null) map.push('同键合并 ' + num(st.merged));
+      if (num(st.dropped) !== null) map.push('超复音丢弃 ' + num(st.dropped));
+      if (num(st.virtual) !== null) map.push('虚音 ' + num(st.virtual));
+      if (map.length) parts.push('映射：' + map.join(' / '));
+    }
+    if (num(info.drums) !== null) parts.push('鼓（丢弃）' + num(info.drums));
+    if (info.range && info.range.length === 2) parts.push('音域 ' + info.range[0] + '–' + info.range[1]);
+    if (num(info.pitchLevel) !== null) parts.push('pitchLevel ' + num(info.pitchLevel));
+    if (num(info.unitMs) !== null) parts.push('时间单位 ' + (Math.round(num(info.unitMs) * 10) / 10) + ' ms');
+    if (typeof info.gridOk === 'boolean') parts.push(info.gridOk ? '时间网格兼容' : '时间网格不兼容');
+    if (r.verify) {
+      if (r.verify.encoding) parts.push('编码 ' + r.verify.encoding);
+      if (num(r.verify.polyphony) !== null) parts.push('最大复音 ' + num(r.verify.polyphony));
+      if (num(r.verify.durationMs) !== null) parts.push('时长 ' + (Math.round(num(r.verify.durationMs) / 100) / 10) + ' s');
+    }
+    return parts.join(' · ');
+  }
+
+  function render(r) {
+    var info = r.info || {};
+    els.stats.textContent = '';
+
+    var outCount = null;
+    if (r.notes && typeof r.notes.length === 'number') outCount = r.notes.length;
+    else if (r.verify && num(r.verify.noteCount) !== null) outCount = num(r.verify.noteCount);
+
+    els.stats.appendChild(statEl('源音符', numText(info.src)));
+    els.stats.appendChild(statEl('输出音符', outCount === null ? '—' : String(outCount)));
+    els.stats.appendChild(statEl('移调', transposeText(info.transpose)));
+    els.stats.appendChild(statEl('BPM', bpmText(info.bpm)));
+    els.stats.appendChild(statEl('可弹性', pctText(info.playability)));
+    els.stats.appendChild(statEl('主旋律保留', melodyText(info.melody)));
+
+    var vText = '未检测';
+    var vCls = '';
+    if (r.verify) { vText = '通过'; vCls = 'ok'; }
+    else if (r.verifyErr) { vText = '未通过'; vCls = 'bad'; }
+    els.stats.appendChild(statEl('格式自检', vText, vCls));
+
+    var detail = detailText(r);
+    if (r.verifyErr) {
+      var msg = errorText(r.verifyErr);
+      detail = (detail ? detail + ' · ' : '') + '自检失败：' + msg;
+    }
+    els.detail.textContent = detail;
+
+    var lines = r.previewText ? String(r.previewText).replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n') : [];
+    els.preview.textContent = lines.length ? lines.slice(0, 200).join('\n') : '（没有可预览的内容）';
+    if (r.previewNote) {
+      els.previewNote.textContent = r.previewNote;
+    } else if (lines.length > 200) {
+      els.previewNote.textContent = '（共 ' + lines.length + ' 行，仅显示前 200 行，完整内容请下载 .txt）';
+    } else {
+      els.previewNote.textContent = '';
+    }
+
+    els.outName.textContent = '输出文件名：' + r.outName;
+    els.downloadBtn.disabled = false;
+    els.result.hidden = false;
+    try {
+      if (els.result.scrollIntoView) els.result.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch (eScroll) {}
+  }
+
+  /* ---------- 下载 ---------- */
+
+  function doDownload() {
+    if (!state.result || !state.result.bytes) {
+      showError('还没有可下载的结果，请先点「转换」。');
+      return;
+    }
+    var blob;
+    try {
+      blob = new Blob([state.result.bytes], { type: 'application/octet-stream' });
+    } catch (e) {
+      showError('生成文件失败：' + errorText(e));
+      return;
+    }
+    var url;
+    try {
+      url = URL.createObjectURL(blob);
+    } catch (e2) {
+      showError('这个浏览器不支持本地下载，请换用较新的浏览器。');
+      return;
+    }
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = state.result.name || 'song.txt';
+    a.rel = 'noopener';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    try { a.click(); } catch (e3) {}
+    setTimeout(function () {
+      try { if (a.parentNode) a.parentNode.removeChild(a); } catch (e4) {}
+      try { URL.revokeObjectURL(url); } catch (e5) {}
+    }, 1500);
+  }
+
+  /* ---------- 事件 ---------- */
+
+  function addOver() {
+    els.dropzone.className = 'drop over';
+  }
+
+  function removeOver() {
+    els.dropzone.className = 'drop';
+  }
+
+  var dragDepth = 0;
+
+  els.dropzone.addEventListener('click', function (e) {
+    if (e.target === els.input) return;
+    try { els.input.click(); } catch (err) {}
+  });
+
+  els.dropzone.addEventListener('keydown', function (e) {
+    var k = e.key;
+    if (k === 'Enter' || k === ' ' || k === 'Spacebar') {
+      e.preventDefault();
+      try { els.input.click(); } catch (err) {}
+    }
+  });
+
+  els.dropzone.addEventListener('dragenter', function (e) {
+    e.preventDefault();
+    dragDepth++;
+    addOver();
+  });
+
+  els.dropzone.addEventListener('dragover', function (e) {
+    e.preventDefault();
+    if (e.dataTransfer) { try { e.dataTransfer.dropEffect = 'copy'; } catch (err) {} }
+    addOver();
+  });
+
+  els.dropzone.addEventListener('dragleave', function (e) {
+    e.preventDefault();
+    dragDepth--;
+    if (dragDepth <= 0) { dragDepth = 0; removeOver(); }
+  });
+
+  els.dropzone.addEventListener('drop', function (e) {
+    e.preventDefault();
+    dragDepth = 0;
+    removeOver();
+    var files = e.dataTransfer && e.dataTransfer.files;
+    if (files && files.length) selectFile(files[0]);
+  });
+
+  document.addEventListener('dragover', function (e) { e.preventDefault(); });
+  document.addEventListener('drop', function (e) { e.preventDefault(); });
+
+  els.input.addEventListener('change', function () {
+    var files = els.input.files;
+    if (files && files.length) selectFile(files[0]);
+  });
+
+  els.fileClear.addEventListener('click', function () { resetAll(); });
+  els.convertBtn.addEventListener('click', function () { doConvert(); });
+  els.downloadBtn.addEventListener('click', function () { doDownload(); });
+
+  /* ---------- 友情链接的「i」展开/收起 ---------- */
+
+  function setHowto(open) {
+    if (!els.muscriptorHowto || !els.muscriptorInfo) return;
+    els.muscriptorHowto.hidden = !open;
+    els.muscriptorInfo.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  els.muscriptorInfo.addEventListener('click', function () {
+    setHowto(els.muscriptorHowto.hidden);
+  });
+
+  // Esc 收起，方便键盘用户
+  document.addEventListener('keydown', function (e) {
+    if ((e.key === 'Escape' || e.key === 'Esc') && els.muscriptorHowto && !els.muscriptorHowto.hidden) {
+      setHowto(false);
+      try { els.muscriptorInfo.focus(); } catch (err) {}
+    }
+  });
+
+  els.nameInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); doConvert(); }
+  });
+  els.authorInput.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); doConvert(); }
+  });
+
+  /* ---------- Service Worker（file:// 下静默失败） ---------- */
+
+  function registerSW() {
+    try {
+      if (!('serviceWorker' in navigator)) return;
+      var proto = location.protocol;
+      if (proto !== 'https:' && proto !== 'http:') return;
+      var host = location.hostname;
+      if (proto === 'http:' && host !== 'localhost' && host !== '127.0.0.1' && host !== '[::1]') return;
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    } catch (e) {
+      /* file:// 或隐私模式下注册必然失败，忽略即可，主功能不受影响 */
+    }
+  }
+
+  /* ---------- 启动 ---------- */
+
+  function init() {
+    var st = checkCore(window.SkyCore);
+    coreOk = st.ok;
+    if (!st.ok) {
+      showCoreWarn(st.missing);
+    } else {
+      els.coreWarn.hidden = true;
+      try {
+        if (window.SkyCore.VERSION) els.version.textContent = 'v' + window.SkyCore.VERSION;
+      } catch (eVer) {}
+    }
+    els.convertBtn.disabled = true;
+    registerSW();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
+</body>
+</html>
