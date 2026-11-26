@@ -384,6 +384,32 @@ input[type="text"]:focus, select:focus {
         如果是整首歌带人声和鼓，可以在 MuScriptor 里只保留钢琴轨再下载，效果会好很多。
       </div>
     </div>
+
+    <div class="link-row">
+      <div class="link-main">
+        <div class="link-name">
+          <a href="https://hear-score.lirentech.net/" target="_blank" rel="noopener noreferrer">听谱 Hearscore</a>
+        </div>
+        <div class="link-desc">备选转换工具：浏览器本地识别 MP3 / WAV 音符，支持钢琴卷帘、原音变速播放、导出 MIDI / JSON</div>
+      </div>
+      <button id="hearscore-info" type="button" class="info-btn"
+              aria-expanded="false" aria-controls="hearscore-howto"
+              aria-label="查看 Hearscore 使用方法" title="使用方法">i</button>
+    </div>
+
+    <div id="hearscore-howto" class="howto" hidden>
+      <strong>MuScriptor 用不了？可以试试 Hearscore</strong>
+      <ol>
+        <li>打开 <a href="https://hear-score.lirentech.net/" target="_blank" rel="noopener noreferrer">hear-score.lirentech.net</a>，选择本地音频文件（MP3 / WAV）。</li>
+        <li>它同样在浏览器里本地识别音符，不上传，能看到钢琴卷帘并试听。</li>
+        <li>导出 <code>MIDI</code> 文件。</li>
+        <li>回到本页，把 <code>.mid</code> 拖进上面的虚线框 → 转换 → 下载 <code>.txt</code>。</li>
+      </ol>
+      <div class="note">
+        两个工具都免费、都在本地处理，可以都试一下：同一段音频用不同工具转出的 MIDI 会有差异，
+        哪个在光遇 15 键上听着更像原曲就用哪个。
+      </div>
+    </div>
   </section>
 
   <footer class="foot">
@@ -431,7 +457,9 @@ input[type="text"]:focus, select:focus {
     coreWarnDetail: byId('core-warn-detail'),
     version: byId('foot-version'),
     muscriptorInfo: byId('muscriptor-info'),
-    muscriptorHowto: byId('muscriptor-howto')
+    muscriptorHowto: byId('muscriptor-howto'),
+    hearscoreInfo: byId('hearscore-info'),
+    hearscoreHowto: byId('hearscore-howto')
   };
 
   var state = { file: null, bytes: null, outName: '', result: null, busy: false };
@@ -945,21 +973,44 @@ input[type="text"]:focus, select:focus {
 
   /* ---------- 友情链接的「i」展开/收起 ---------- */
 
-  function setHowto(open) {
-    if (!els.muscriptorHowto || !els.muscriptorInfo) return;
-    els.muscriptorHowto.hidden = !open;
-    els.muscriptorInfo.setAttribute('aria-expanded', open ? 'true' : 'false');
+  // 每一条友情链接都有自己的「i」按钮和说明面板，用同一个逻辑处理。
+  var HOWTOS = [
+    { btn: els.muscriptorInfo, panel: els.muscriptorHowto },
+    { btn: els.hearscoreInfo, panel: els.hearscoreHowto }
+  ];
+
+  function setHowto(entry, open) {
+    if (!entry || !entry.panel || !entry.btn) return;
+    entry.panel.hidden = !open;
+    entry.btn.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
 
-  els.muscriptorInfo.addEventListener('click', function () {
-    setHowto(els.muscriptorHowto.hidden);
-  });
+  // 同时只展开一个：点开一个就把另一个收起，避免页面上一堆说明挤在一起
+  function toggleHowto(target) {
+    var willOpen = target.panel.hidden;
+    for (var i = 0; i < HOWTOS.length; i++) {
+      if (HOWTOS[i] === target) setHowto(HOWTOS[i], willOpen);
+      else setHowto(HOWTOS[i], false);
+    }
+    if (!willOpen) return;
+    try { target.panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+  }
 
-  // Esc 收起，方便键盘用户
+  for (var hi = 0; hi < HOWTOS.length; hi++) {
+    (function (entry) {
+      if (!entry.btn) return;
+      entry.btn.addEventListener('click', function () { toggleHowto(entry); });
+    })(HOWTOS[hi]);
+  }
+
+  // Esc 收起所有，方便键盘用户
   document.addEventListener('keydown', function (e) {
-    if ((e.key === 'Escape' || e.key === 'Esc') && els.muscriptorHowto && !els.muscriptorHowto.hidden) {
-      setHowto(false);
-      try { els.muscriptorInfo.focus(); } catch (err) {}
+    if (e.key !== 'Escape' && e.key !== 'Esc') return;
+    for (var i = 0; i < HOWTOS.length; i++) {
+      if (HOWTOS[i].panel && !HOWTOS[i].panel.hidden) {
+        setHowto(HOWTOS[i], false);
+        try { HOWTOS[i].btn.focus(); } catch (err) {}
+      }
     }
   });
 

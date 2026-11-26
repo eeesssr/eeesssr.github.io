@@ -922,7 +922,9 @@
       + '"name":' + JSON.stringify(name) + ','
       + '"author":' + JSON.stringify(opts.author ? String(opts.author) : '') + ','
       + '"arrangedBy":' + JSON.stringify(opts.arranged ? String(opts.arranged) : '') + ','
-      + '"transcribedBy":' + JSON.stringify(opts.transcribed ? String(opts.transcribed) : 'MuScriptor') + ','
+      // transcribedBy 默认留空，与 core.py 保持一致。
+      // 本工具接受任何标准 MIDI，默认署名某个转谱工具会造成事实性错误。
+      + '"transcribedBy":' + JSON.stringify(opts.transcribed ? String(opts.transcribed) : '') + ','
       + '"permission":"",'
       + '"isComposed":true,'
       + '"bpm":' + pyFloatStr(bpmOut) + ','
